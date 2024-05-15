@@ -801,6 +801,19 @@ function cmake.select_launch_target(callback, regenerate)
   )
 end
 
+function cmake.delete_build_dir()
+  local build_dir = config:build_directory_path()
+  local input = vim.fn.inputlist({
+            "Do you want to delete this build directory: " .. build_dir .. " ?",
+            "1. Yes",
+            "2. No",
+        })
+
+  if input == 1 then
+    os.execute("rm -rd " .. build_dir)
+  end
+end
+
 function cmake.get_base_vars()
   local vars = { dir = {} }
 
