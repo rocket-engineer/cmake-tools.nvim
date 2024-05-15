@@ -277,6 +277,16 @@ vim.api.nvim_create_user_command(
   }
 )
 
+--- Run ccmake
+vim.api.nvim_create_user_command(
+  "CMakeCcmake", -- name
+  cmake_tools.run_ccmake, -- command
+  { -- opts
+    nargs = "*",
+    desc = "Start ccmake",
+  }
+)
+
 --- Remove build directory
 vim.api.nvim_create_user_command(
   "CMakeDeleteBuildDir", -- name

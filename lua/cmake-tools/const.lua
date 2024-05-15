@@ -2,8 +2,10 @@ local osys = require("cmake-tools.osys")
 local const = {
   cmake_command = "cmake", -- this is used to specify cmake command path
   ctest_command = "ctest", -- this is used to specify ctest command path
+  ccmake_command = nil,    -- this is used to specify ccmake command path
+
   cmake_regenerate_on_save = true, -- auto generate when save CMakeLists.txt
-  cmake_generate_options = { "-DCMAKE_EXPORT_COMPILE_COMMANDS=1" }, -- this will be passed when invoke `CMakeGenerate`
+  cmake_generate_options = { "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON" }, -- this will be passed when invoke `CMakeGenerate`
   cmake_build_options = {}, -- this will be passed when invoke `CMakeBuild`
   cmake_build_directory = function()
     if osys.iswin32 then
@@ -18,6 +20,7 @@ local const = {
     short = { show = true }, -- whether to show short message
     long = { show = true, max_length = 40 }, -- whether to show long message
   },
+
   cmake_dap_configuration = { -- debug settings for cmake
     name = "cpp",
     type = "codelldb",
@@ -26,6 +29,7 @@ local const = {
     runInTerminal = true,
     console = "integratedTerminal",
   },
+
   cmake_executor = { -- executor to use
     name = "quickfix", -- name of the executor
     opts = {}, -- the options the executor will get, possible values depend on the executor type. See `default_opts` for possible values.
@@ -69,6 +73,7 @@ local const = {
       },
     },
   },
+
   cmake_runner = { -- executor to use
     name = "terminal", -- name of the runner
     opts = {}, -- the options the runner will get, possible values depend on the runner type. See `default_opts` for possible values.
@@ -112,12 +117,14 @@ local const = {
       },
     },
   },
+
   cmake_notifications = {
     runner = { enabled = true },
     executor = { enabled = true },
     spinner = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }, -- icons used for progress display
     refresh_rate_ms = 100, -- how often to iterate icons
   },
+
   cmake_virtual_text_support = true, -- Show the target related to current file using virtual text (at right corner)
 }
 
