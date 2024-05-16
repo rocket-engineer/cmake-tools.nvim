@@ -11,6 +11,7 @@ local Config = {
   reply_directory = nil,
   build_type = nil,
   variant = nil,
+  nprocs = 1,
   build_target = nil,
   launch_target = nil,
   kit = nil,

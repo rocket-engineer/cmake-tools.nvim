@@ -802,6 +802,12 @@ function cmake.select_launch_target(callback, regenerate)
   )
 end
 
+function cmake.set_nprocs()
+  vim.ui.input({ prompt = 'Select number of processors: ' }, function(input)
+    config.nprocs = tonumber(input)
+  end)
+end
+
 function cmake.delete_build_dir()
   local build_dir = config:build_directory_path()
   local input = vim.fn.inputlist({

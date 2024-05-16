@@ -287,6 +287,16 @@ vim.api.nvim_create_user_command(
   }
 )
 
+--- Select number of processors
+vim.api.nvim_create_user_command(
+  "CMakeSelectProcsNumber", -- name
+  cmake_tools.set_nprocs, -- command
+  { -- opts
+    nargs = "?",
+    desc = "Select the numer of processors for building",
+  }
+)
+
 --- Remove build directory
 vim.api.nvim_create_user_command(
   "CMakeDeleteBuildDir", -- name
