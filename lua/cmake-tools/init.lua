@@ -92,7 +92,7 @@ function cmake.generate(opt, callback)
 
   -- if exists presets, preset include all info that cmake
   -- needed to execute, so we don't use cmake-kits.json and
-  -- cmake-variants.[json|yaml] event they exist.
+  -- cmake-variants.[json|yaml] even if they exist.
   local presets_file = presets.check(config.cwd)
   if presets_file and not config.configure_preset then
     -- this will also set value for build type from preset.
