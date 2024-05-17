@@ -15,6 +15,11 @@ M.provide_config_settings = function(config_settings)
     config.overwrite_preset_build_dir = false
   end
 
+  -- initial cache
+  if config_settings.initial_cache ~= nil and
+     config_settings.initial_cache ~= "" then
+    config.initial_cache = config_settings.initial_cache
+  end
   -- update preset
   if config_settings.preset ~= nil and
      config_settings.preset ~= "" then

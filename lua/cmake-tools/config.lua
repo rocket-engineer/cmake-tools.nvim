@@ -15,6 +15,7 @@ local Config = {
   build_target = nil,
   launch_target = nil,
   kit = nil,
+  initial_cache = nil,
   configure_preset = nil,
   build_preset = nil,
   overwrite_preset_build_dir = true,

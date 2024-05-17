@@ -122,6 +122,11 @@ function cmake.generate(opt, callback)
       "-B", config:build_directory_path(),
     }
 
+    if config.initial_cache ~= nil and
+       string.len(config.initial_cache) > 0 then
+      vim.list_extend(args, {"-C", config.initial_cache})
+    end
+
     vim.list_extend(args, {"--preset", config.configure_preset})
     vim.list_extend(args, config:generate_options())
     vim.list_extend(args, fargs)
