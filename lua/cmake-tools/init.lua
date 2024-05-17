@@ -69,6 +69,10 @@ function cmake.generate(opt, callback)
     return log.error(result.message)
   end
 
+
+  -- CMake Cleaning
+  -- ==============
+
   local clean = opt.bang
   local fargs = opt.fargs or {}
   if clean then
@@ -80,6 +84,10 @@ function cmake.generate(opt, callback)
       cmake.generate({ fargs = fargs }, callback)
     end)
   end
+
+
+  -- CMake Preset Handling
+  -- =====================
 
   -- if exists presets, preset include all info that cmake
   -- needed to execute, so we don't use cmake-kits.json and
@@ -100,15 +108,18 @@ function cmake.generate(opt, callback)
       presets.get_preset_by_name(config.configure_preset, "configurePresets", config.cwd),
       config.cwd
     )
-    if build_directory ~= "" then
+    if build_directory ~= "" and config.overwrite_preset_build_dir then
       config:update_build_dir(build_directory, build_directory)
     end
     config:generate_build_directory()
 
     local args = {
-      "--preset",
-      config.configure_preset,
+      -- TODO: add config:source_directory_path()
+      "-S", config.cwd,
+      "-B", config:build_directory_path(),
     }
+
+    vim.list_extend(args, {"--preset", config.configure_preset})
     vim.list_extend(args, config:generate_options())
     vim.list_extend(args, fargs)
 
@@ -122,6 +133,10 @@ function cmake.generate(opt, callback)
       cmake.create_regenerate_on_save_autocmd()
     end, const.cmake_notifications)
   end
+
+
+  -- CMake Kits Handling
+  -- ===================
 
   -- if exists cmake-kits.json, kit is used to set
   -- environmental variables and args.
@@ -1609,4 +1624,9 @@ function cmake.register_telescope_function()
   end
 end
 
-return cmake
+-- return cmake
+return setmetatable(cmake, {
+  __index = function(_, k)
+    return require("cmake-tools.api")[k]
+  end,
+})

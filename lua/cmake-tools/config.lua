@@ -17,6 +17,7 @@ local Config = {
   kit = nil,
   configure_preset = nil,
   build_preset = nil,
+  overwrite_preset_build_dir = true,
   base_settings = {
     env = {},
     build_dir = "",
