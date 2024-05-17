@@ -62,18 +62,24 @@ function _toggleterm.run(cmd, env_script, env, args, cwd, opts, on_exit, on_outp
     direction = opts.direction, -- the layout for the terminal, same as the main config options
     close_on_exit = opts.close_on_exit, -- close the terminal window when the process exits
     auto_scroll = opts.auto_scroll, -- automatically scroll to the bottom on terminal output
+    display_name = " " .. opts.display_name .. " ",
+    float_opts = opts.float_opts,
+    highlights = opts.highlights,
     -- callbacks for processing the output
+    -- callback for processing output on stdout
     on_stdout = function(t, job, data, name)
       on_output(data)
-    end, -- callback for processing output on stdout
+    end,
+    -- callback for processing output on stderr
     on_stderr = function(t, job, data, name)
       on_output(nil, data)
-    end, -- callback for processing output on stderr
+    end,
+    -- function to run when terminal process exits
     on_exit = function(t, job, exit_code, name)
       on_exit(exit_code)
       _toggleterm.chan_id = nil
       _toggleterm.cmd = nil
-    end, -- function to run when terminal process exits
+    end,
   })
   _toggleterm.term:toggle()
   _toggleterm.chan_id = _toggleterm.term.job_id

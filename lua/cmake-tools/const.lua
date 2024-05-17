@@ -46,6 +46,9 @@ local const = {
         close_on_exit = false, -- whether close the terminal when exit
         auto_scroll = true, -- whether auto scroll to the bottom
         singleton = true, -- single instance, autocloses the opened one, if present
+        display_name = "CMake Executor",
+        float_opts = {},
+        highlights = nil,
       },
       overseer = {
         new_task_opts = {
@@ -90,6 +93,9 @@ local const = {
         close_on_exit = false, -- whether close the terminal when exit
         auto_scroll = true, -- whether auto scroll to the bottom
         singleton = true, -- single instance, autocloses the opened one, if present
+        display_name = "CMake Runner",
+        float_opts = {},
+        highlights = nil,
       },
       overseer = {
         new_task_opts = {
