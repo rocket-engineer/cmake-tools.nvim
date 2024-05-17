@@ -14,6 +14,7 @@ local environment = require("cmake-tools.environment")
 local file_picker = require("cmake-tools.file_picker")
 local scratch = require("cmake-tools.scratch")
 local ccmake = require("cmake-tools.ccmake")
+local Path = require("plenary.path")
 
 local ctest = require("cmake-tools.test.ctest")
 
@@ -1168,8 +1169,24 @@ function cmake.compile_commands_from_soft_link()
     return
   end
 
+  -- compose directory path to compile commands
+  local compile_commands_path = config.cwd
+  print(compile_commands_path)
+  if const.cmake_soft_link_compile_commands_location ~= nil and
+     string.len(const.cmake_soft_link_compile_commands_location) > 0 then
+    compile_commands_path = compile_commands_path .. "/" .. const.cmake_soft_link_compile_commands_location
+    print(compile_commands_path)
+  end
+
+  -- create directory if not existent
+  local compile_commands_dir = Path:new(compile_commands_path)
+  if not compile_commands_dir:exists() then
+    compile_commands_dir:mkdir({ parents = true })
+  end
+
+  -- create soft link
   local source = config:build_directory_path() .. "/compile_commands.json"
-  local destination = vim.loop.cwd() .. "/compile_commands.json"
+  local destination = compile_commands_path .. "/compile_commands.json"
   utils.softlink(source, destination)
 end
 
