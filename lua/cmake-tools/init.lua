@@ -251,6 +251,10 @@ function cmake.build(opt, callback)
     args = { "--build", utils.transform_path(config:build_directory_path()) }
   end
 
+  if config.nprocs > 1 then
+    vim.list_extend(args, { "--parallel", config.nprocs })
+  end
+
   vim.list_extend(args, config:build_options())
 
   if opt.target ~= nil then
@@ -1034,7 +1038,6 @@ function cmake.build_current_file(opt)
     )
   end
 end
-
 
 function cmake.run_ccmake()
   local build_dir = config:build_directory_path()
