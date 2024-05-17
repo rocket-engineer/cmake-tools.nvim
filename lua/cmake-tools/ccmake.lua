@@ -14,6 +14,7 @@ function M.run_ccmake(cmd, build_dir)
     cmd = cmd .. " " .. build_dir,
     direction = "float",
     hidden = true,
+    display_name = " ccmake ",
     highlights = {
       Normal = {
         guibg = "#000000",
