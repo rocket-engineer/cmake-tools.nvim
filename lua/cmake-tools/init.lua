@@ -1172,23 +1172,20 @@ function cmake.compile_commands_from_soft_link()
   end
 
   -- compose directory path to compile commands
-  local compile_commands_path = config.cwd
-  print(compile_commands_path)
+  local compile_commands_dir = config.cwd
+  print(compile_commands_dir)
   if const.cmake_soft_link_compile_commands_location ~= nil and
      string.len(const.cmake_soft_link_compile_commands_location) > 0 then
-    compile_commands_path = compile_commands_path .. "/" .. const.cmake_soft_link_compile_commands_location
-    print(compile_commands_path)
+    compile_commands_dir = compile_commands_dir .. "/" .. const.cmake_soft_link_compile_commands_location
+    print(compile_commands_dir)
   end
 
   -- create directory if not existent
-  local compile_commands_dir = Path:new(compile_commands_path)
-  if not compile_commands_dir:exists() then
-    compile_commands_dir:mkdir({ parents = true })
-  end
+  utils.mkdir(compile_commands_dir)
 
   -- create soft link
   local source = config:build_directory_path() .. "/compile_commands.json"
-  local destination = compile_commands_path .. "/compile_commands.json"
+  local destination = compile_commands_dir .. "/compile_commands.json"
   utils.softlink(source, destination)
 end
 
