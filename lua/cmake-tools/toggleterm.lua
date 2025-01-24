@@ -65,6 +65,7 @@ function _toggleterm.run(cmd, env_script, env, args, cwd, opts, on_exit, on_outp
     display_name = " " .. opts.display_name .. " ",
     float_opts = opts.float_opts,
     highlights = opts.highlights,
+    on_open = opts.on_open,
     -- callbacks for processing the output
     -- callback for processing output on stdout
     on_stdout = function(t, job, data, name)
