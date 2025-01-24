@@ -1,7 +1,7 @@
 local popup = require("plenary.popup")
 
 local function create_window(title)
-  local width = 80
+  local width = 200
   local height = 20
   local borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" }
   local bufnr = vim.api.nvim_create_buf(false, false)
