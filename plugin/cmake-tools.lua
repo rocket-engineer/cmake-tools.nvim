@@ -306,3 +306,13 @@ vim.api.nvim_create_user_command(
     desc = "Remove the current build directory",
   }
 )
+
+--- Reload session
+vim.api.nvim_create_user_command(
+  "CMakeReloadSession", -- name
+  cmake_tools.reload_session, -- command
+  { -- opts
+    nargs = 0,
+    desc = "Reload the CMake session",
+  }
+)
