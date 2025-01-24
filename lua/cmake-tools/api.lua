@@ -104,6 +104,7 @@ M.retrieve_execution_settings = function()
   execution_settings["exe"] = launch_path .. "/" .. target
   execution_settings["args"] = target_settings["args"]
   execution_settings["envs"] = target_settings["env"]
+  execution_settings["src_dir"] = config.cwd
 
   return execution_settings
 end
