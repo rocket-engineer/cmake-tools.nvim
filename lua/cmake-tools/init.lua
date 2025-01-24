@@ -1167,6 +1167,10 @@ function cmake.get_build_options()
   return config:build_options()
 end
 
+function cmake.get_nprocs()
+  return config.nprocs
+end
+
 --[[ end ]]
 
 function cmake.configure_compile_commands()
