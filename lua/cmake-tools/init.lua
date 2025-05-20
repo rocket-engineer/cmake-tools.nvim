@@ -854,6 +854,10 @@ function cmake.reload_session()
   _session.update(config, new_config)
 end
 
+function cmake.reset_session()
+  _session.reset(config)
+end
+
 function cmake.get_base_vars()
   local vars = { dir = {} }
 
