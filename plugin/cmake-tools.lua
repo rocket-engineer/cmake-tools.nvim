@@ -295,3 +295,13 @@ vim.api.nvim_create_user_command(
     desc = "Select the numer of processors for building",
   }
 )
+
+--- Remove build directory
+vim.api.nvim_create_user_command(
+  "CMakeDeleteBuildDir", -- name
+  cmake_tools.delete_build_dir, -- command
+  { -- opts
+    nargs = 0,
+    desc = "Remove the current build directory",
+  }
+)
