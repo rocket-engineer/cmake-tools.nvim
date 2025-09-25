@@ -408,6 +408,10 @@ function cmake.build(opt, callback)
     vim.list_extend(args, { "--config", config.build_type })
   end
 
+  if config.nprocs > 1 then
+    vim.list_extend(args, { "--parallel", tostring(config.nprocs) })
+  end
+
   vim.list_extend(args, config:build_options())
 
   local env = environment.get_build_environment(config)
@@ -1011,6 +1015,12 @@ function cmake.select_launch_target(regenerate, callback)
   )
 end
 
+function cmake.set_nprocs()
+  vim.ui.input({ prompt = "Select number of processors: " }, function(input)
+    config.nprocs = tonumber(input)
+  end)
+end
+
 function cmake.get_base_vars()
   local vars = { dir = {} }
 
@@ -1357,6 +1367,10 @@ end
 
 function cmake.get_build_options()
   return config:build_options()
+end
+
+function cmake.get_nprocs()
+  return config.nprocs
 end
 
 --[[ end ]]

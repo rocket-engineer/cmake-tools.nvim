@@ -275,6 +275,7 @@ vim.api.nvim_create_user_command(
     desc = "CMake run test",
   }
 )
+
 --- CMake quick start
 vim.api.nvim_create_user_command(
   "CMakeQuickStart", -- name
@@ -282,5 +283,15 @@ vim.api.nvim_create_user_command(
   { -- opts
     nargs = 0,
     desc = "CMake run quickstart",
+  }
+)
+
+--- Select number of processors
+vim.api.nvim_create_user_command(
+  "CMakeSelectProcsNumber", -- name
+  cmake_tools.set_nprocs, -- command
+  { -- opts
+    nargs = "?",
+    desc = "Select the numer of processors for building",
   }
 )

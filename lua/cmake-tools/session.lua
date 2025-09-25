@@ -96,6 +96,9 @@ function session.update(config, old_config)
     if old_config.cwd then
       config.cwd = old_config.cwd
     end
+    if old_config.nprocs then
+      config.nprocs = old_config.nprocs
+    end
 
     config.base_settings =
       vim.tbl_deep_extend("keep", old_config.base_settings, config.base_settings)
@@ -129,6 +132,7 @@ function session.save(config)
     base_settings = config.base_settings,
     target_settings = config.target_settings,
     cwd = config.cwd,
+    nprocs = config.nprocs,
   }
 
   if file then
