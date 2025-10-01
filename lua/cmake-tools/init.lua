@@ -14,6 +14,7 @@ local environment = require("cmake-tools.environment")
 local file_picker = require("cmake-tools.file_picker")
 local scratch = require("cmake-tools.scratch")
 local Result = require("cmake-tools.result")
+local ccmake = require("cmake-tools.ccmake")
 local Path = require("plenary.path")
 
 local ctest = require("cmake-tools.test.ctest")
@@ -1281,6 +1282,17 @@ function cmake.build_current_file(opt)
       end)
     )
   end
+end
+
+function cmake.run_ccmake()
+  local build_dir = config:build_directory_path()
+  local ccmake_cmd = const.ccmake_command
+
+  if ccmake_cmd ~= nil then
+    ccmake.run_ccmake(ccmake_cmd, build_dir)
+  end
+
+  -- TODO: Refresh status line when ccmake is closed
 end
 
 --[[ Getters ]]

@@ -286,6 +286,16 @@ vim.api.nvim_create_user_command(
   }
 )
 
+--- Run ccmake
+vim.api.nvim_create_user_command(
+  "CMakeCcmake", -- name
+  cmake_tools.run_ccmake, -- command
+  { -- opts
+    nargs = "*",
+    desc = "Start ccmake",
+  }
+)
+
 --- Select number of processors
 vim.api.nvim_create_user_command(
   "CMakeSelectProcsNumber", -- name
