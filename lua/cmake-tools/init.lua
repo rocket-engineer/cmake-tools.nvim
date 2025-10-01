@@ -176,9 +176,21 @@ function cmake.generate(opt, callback)
       config:generate_build_directory()
 
       local args = {
-        "--preset",
-        config.configure_preset,
+        -- TODO: add config:source_directory_path()
+        "-S",
+        config.cwd,
+        "-B",
+        config:build_directory_path(),
       }
+
+      if
+        config.base_settings.initial_cache ~= nil
+        and string.len(config.base_settings.initial_cache) > 0
+      then
+        vim.list_extend(args, { "-C", config.base_settings.initial_cache })
+      end
+
+      vim.list_extend(args, { "--preset", config.configure_preset })
       vim.list_extend(args, config:generate_options())
       vim.list_extend(args, fargs)
 

@@ -24,6 +24,7 @@ local Config = {
     build_dir = "",
     working_dir = "${dir.binary}",
     use_preset = true,
+    initial_cache = nil,
     generate_options = {},
     build_options = {},
     show_disabled_build_presets = true,
