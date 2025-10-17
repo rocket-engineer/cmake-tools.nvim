@@ -1047,6 +1047,16 @@ function cmake.delete_build_dir()
   end
 end
 
+function cmake.reload_session()
+  local new_config = _session.load()
+
+  _session.update(config, new_config)
+end
+
+function cmake.reset_session()
+  _session.reset(config)
+end
+
 function cmake.get_base_vars()
   local vars = { dir = {} }
 

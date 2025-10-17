@@ -61,6 +61,29 @@ function session.load()
   return {}
 end
 
+function session.reset(config)
+  local path = get_current_path()
+
+  if utils.file_exists(path) then
+    local file = Path:new(path)
+    utils.rmfile(file)
+  end
+
+  -- config.build_directory = nil
+  config.build_type = nil
+  config.variant = nil
+  config.build_target = nil
+  config.launch_target = nil
+  config.kit = nil
+  config.configure_preset = nil
+  config.build_preset = nil
+  config.env_script = " "
+  config.nprocs = 1
+
+  config.base_settings = {}
+  config.target_settings = {}
+end
+
 function session.update(config, old_config)
   if next(old_config) ~= nil then
     if old_config.build_directory and old_config.base_settings.build_dir then
