@@ -1,3 +1,4 @@
+local Path = require("plenary.path")
 local osys = require("cmake-tools.osys")
 local utils = require("cmake-tools.utils")
 
