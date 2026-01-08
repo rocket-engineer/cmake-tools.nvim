@@ -806,7 +806,7 @@ function cmake.select_kit(callback)
   end
 end
 
-function cmake.select_configure_preset(callback)
+function cmake.select_configure_preset(opts, callback)
   callback = type(callback) == "function" and callback
     or function(result)
       if result:is_ok() then
@@ -829,24 +829,43 @@ function cmake.select_configure_preset(callback)
       local p = presets:get_configure_preset(p_name)
       return p.displayName or p.name
     end
-    vim.ui.select(
-      configure_preset_names,
-      {
-        prompt = "Select cmake configure presets",
-        format_item = format_preset_name,
-      },
-      vim.schedule_wrap(function(choice)
-        if not choice then
-          callback(Result:new_error(Types.NOT_SELECT_PRESET, "No configure preset selected"))
-          return
+
+    if not opts then
+      vim.ui.select(
+        configure_preset_names,
+        {
+          prompt = "Select cmake configure presets",
+          format_item = format_preset_name,
+        },
+        vim.schedule_wrap(function(choice)
+          if not choice then
+            callback(Result:new_error(Types.NOT_SELECT_PRESET, "No configure preset selected"))
+            return
+          end
+          if config.configure_preset ~= choice then
+            config.configure_preset = choice
+            config.build_type = presets:get_configure_preset(choice):get_build_type()
+          end
+          callback(Result:new(Types.SUCCESS, nil, nil))
+        end)
+      )
+    else
+      if opts.args and type(opts.args) == "string" and opts.args ~= "" then
+        local targets = presets:get_configure_preset_names()
+        if vim.tbl_contains(targets, opts.args) then
+          config.configure_preset = opts.args
+          config.build_type = presets:get_configure_preset(opts.args):get_build_type()
+        else
+          vim.notify(
+            'Configure preset "' .. opts.args .. '" was not found.',
+            vim.log.levels.ERROR,
+            { title = "cmake-tools" }
+          )
         end
-        if config.configure_preset ~= choice then
-          config.configure_preset = choice
-          config.build_type = presets:get_configure_preset(choice):get_build_type()
-        end
-        callback(Result:new(Types.SUCCESS, nil, nil))
-      end)
-    )
+      else
+        vim.notify("No or wrong argument given.", vim.log.levels.ERROR, { title = "cmake-tools" })
+      end
+    end
   else
     callback(
       Result:new_error(Types.CANNOT_FIND_PRESETS_FILE, "Cannot find CMake[User]Presets file")
@@ -922,7 +941,7 @@ function cmake.select_build_preset(callback)
   end
 end
 
-function cmake.select_build_target(regenerate, callback)
+function cmake.select_build_target(opts, regenerate, callback)
   callback = type(callback) == "function" and callback or function(_) end
   if not (config:has_build_directory()) then
     -- configure it
@@ -936,7 +955,6 @@ function cmake.select_build_target(regenerate, callback)
   end
 
   local targets_res = config:build_targets()
-
   if targets_res.code ~= Types.SUCCESS then
     -- try again
     if not regenerate then
@@ -952,19 +970,36 @@ function cmake.select_build_target(regenerate, callback)
       end)
     end
   end
+
   local targets, display_targets = targets_res.data.targets, targets_res.data.display_targets
-  vim.ui.select(
-    display_targets,
-    { prompt = "Select build target" },
-    vim.schedule_wrap(function(_, idx)
-      if not idx then
-        callback(Result:new_error(Types.NOT_SELECT_BUILD_TARGET, "No target selected: cancelled"))
-        return
+  if not opts or opts.args == "" then
+    vim.ui.select(
+      display_targets,
+      { prompt = "Select build target" },
+      vim.schedule_wrap(function(_, idx)
+        if not idx then
+          callback(Result:new_error(Types.NOT_SELECT_BUILD_TARGET, "No target selected: cancelled"))
+          return
+        end
+        config.build_target = { targets[idx] }
+        callback(Result:new(Types.SUCCESS, config.build_target, nil))
+      end)
+    )
+  else
+    if opts.args and type(opts.args) == "string" and opts.args ~= "" then
+      if vim.tbl_contains(targets, opts.args) then
+        config.build_target = { opts.args }
+      else
+        vim.notify(
+          'Build target "' .. opts.args .. '" was not found.',
+          vim.log.levels.ERROR,
+          { title = "cmake-tools" }
+        )
       end
-      config.build_target = { targets[idx] }
-      callback(Result:new(Types.SUCCESS, config.build_target, nil))
-    end)
-  )
+    else
+      vim.notify("No or wrong argument given.", vim.log.levels.ERROR, { title = "cmake-tools" })
+    end
+  end
 end
 
 function cmake.get_cmake_launch_targets(callback)
@@ -983,7 +1018,7 @@ function cmake.get_cmake_launch_targets(callback)
   callback(config:launch_targets())
 end
 
-function cmake.select_launch_target(regenerate, callback)
+function cmake.select_launch_target(opts, regenerate, callback)
   callback = callback or function() end
   if not (config:has_build_directory()) then
     -- configure it
@@ -997,7 +1032,6 @@ function cmake.select_launch_target(regenerate, callback)
   end
 
   local targets_res = config:launch_targets()
-
   if targets_res.code ~= Types.SUCCESS then
     -- try again
     if not regenerate then
@@ -1012,25 +1046,45 @@ function cmake.select_launch_target(regenerate, callback)
       end)
     end
   end
-  local targets, display_targets = targets_res.data.targets, targets_res.data.display_targets
 
-  vim.ui.select(
-    display_targets,
-    { prompt = "Select launch target" },
-    vim.schedule_wrap(function(_, idx)
-      if not idx then
-        return
+  local targets, display_targets = targets_res.data.targets, targets_res.data.display_targets
+  if not opts or opts.args == "" then
+    vim.ui.select(
+      display_targets,
+      { prompt = "Select launch target" },
+      vim.schedule_wrap(function(_, idx)
+        if not idx then
+          return
+        end
+        config.launch_target = targets[idx]
+        callback(Result:new(Types.SUCCESS, config.launch_target, nil))
+      end)
+    )
+  else
+    if opts.args and type(opts.args) == "string" and opts.args ~= "" then
+      if vim.tbl_contains(targets, opts.args) then
+        config.launch_target = opts.args
+      else
+        vim.notify(
+          'Launch target "' .. opts.args .. '" was not found.',
+          vim.log.levels.ERROR,
+          { title = "cmake-tools" }
+        )
       end
-      config.launch_target = targets[idx]
-      callback(Result:new(Types.SUCCESS, config.launch_target, nil))
-    end)
-  )
+    else
+      vim.notify("No or wrong argument given.", vim.log.levels.ERROR, { title = "cmake-tools" })
+    end
+  end
 end
 
-function cmake.set_nprocs()
-  vim.ui.input({ prompt = "Select number of processors: " }, function(input)
-    config.nprocs = tonumber(input)
-  end)
+function cmake.set_nprocs(opts)
+  if not opts or opts.args == "" then
+    vim.ui.input({ prompt = "Select number of processors: " }, function(input)
+      config.nprocs = tonumber(input)
+    end)
+  elseif opts.args then
+    config.nprocs = tonumber(opts.args)
+  end
 end
 
 function cmake.delete_build_dir()
@@ -1518,8 +1572,8 @@ function cmake.select_cwd(cwd_path)
   end
 end
 
-function cmake.select_build_dir(cwd_path)
-  if cwd_path.args == "" then
+function cmake.select_build_dir(opts)
+  if opts.args == "" then
     vim.ui.input(
       {
         prompt = "The directory where the build files should locate: \n",
@@ -1537,8 +1591,8 @@ function cmake.select_build_dir(cwd_path)
         cmake.generate({ bang = false, fargs = {} }, nil)
       end)
     )
-  elseif cwd_path.args then
-    config:update_build_dir(vim.fn.resolve(cwd_path.args), vim.fn.resolve(cwd_path.args))
+  elseif opts.args then
+    config:update_build_dir(vim.fn.resolve(opts.args), vim.fn.resolve(opts.args))
     cmake.generate({ bang = false, fargs = {} }, nil)
   end
 end

@@ -192,7 +192,7 @@ vim.api.nvim_create_user_command(
   "CMakeSelectConfigurePreset", -- name
   cmake_tools.select_configure_preset, -- command
   { -- opts
-    nargs = 0,
+    nargs = "?",
     desc = "CMake select cmake configure preset",
   }
 )
@@ -211,7 +211,7 @@ vim.api.nvim_create_user_command(
   "CMakeSelectBuildTarget", -- name
   cmake_tools.select_build_target, -- command
   { -- opts
-    nargs = 0,
+    nargs = "?",
     desc = "CMake select build target",
   }
 )
@@ -221,7 +221,7 @@ vim.api.nvim_create_user_command(
   "CMakeSelectLaunchTarget", -- name
   cmake_tools.select_launch_target, -- command
   { -- opts
-    nargs = 0,
+    nargs = "?",
     desc = "CMake select launch target",
   }
 )
@@ -302,6 +302,7 @@ vim.api.nvim_create_user_command(
   cmake_tools.set_nprocs, -- command
   { -- opts
     nargs = "?",
+    bang = true,
     desc = "Select the numer of processors for building",
   }
 )
