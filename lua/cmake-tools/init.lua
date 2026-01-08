@@ -1473,6 +1473,14 @@ function cmake.get_nprocs()
   return config.nprocs
 end
 
+function cmake.get_target_settings()
+  return config.target_settings
+end
+
+function cmake.set_target_settings(target_settings)
+  config.target_settings = target_settings
+end
+
 --[[ end ]]
 
 function cmake.configure_compile_commands()
