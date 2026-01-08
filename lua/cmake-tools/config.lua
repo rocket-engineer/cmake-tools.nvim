@@ -34,6 +34,7 @@ local Config = {
   runner = nil,
   env_script = " ",
   cwd = vim.loop.cwd(),
+  session_name_provider = nil,
 }
 
 function Config:new(const)
@@ -50,6 +51,7 @@ function Config:new(const)
 
   obj.executor = const.cmake_executor
   obj.runner = const.cmake_runner
+  obj.session_name_provider = const.session_name_provider
 
   return obj
 end

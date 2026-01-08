@@ -24,11 +24,18 @@ local function get_cache_path()
   end
 end
 
-local function get_current_path()
-  local current_path = vim.loop.cwd()
+local function get_current_path(user_path)
+  local current_path
+  if user_path then
+    current_path = user_path
+  else
+    current_path = vim.loop.cwd()
+  end
+
   local clean_path = current_path:gsub("/", "")
   clean_path = clean_path:gsub("\\", "")
   clean_path = clean_path:gsub(":", "")
+
   return get_cache_path() .. clean_path .. ".lua"
 end
 
@@ -51,8 +58,12 @@ local function init_session()
   end
 end
 
-function session.load()
-  local path = get_current_path()
+function session.load(config)
+  local user_path = nil
+  if config.session_name_provider then
+    user_path = config.session_name_provider()
+  end
+  local path = get_current_path(user_path)
 
   if utils.file_exists(path) then
     local config = dofile(path)
@@ -63,7 +74,11 @@ function session.load()
 end
 
 function session.reset(config)
-  local path = get_current_path()
+  local user_path = nil
+  if config.session_name_provider then
+    user_path = config.session_name_provider()
+  end
+  local path = get_current_path(user_path)
 
   if utils.file_exists(path) then
     local file = Path:new(path)
@@ -140,7 +155,11 @@ end
 function session.save(config)
   init_session()
 
-  local path = get_current_path()
+  local user_path = nil
+  if config.session_name_provider then
+    user_path = config.session_name_provider()
+  end
+  local path = get_current_path(user_path)
   local file = io.open(path, "w")
 
   local serialized_object = {

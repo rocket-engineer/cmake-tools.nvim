@@ -142,6 +142,7 @@ local const = {
   },
   cmake_virtual_text_support = true, -- Show the target related to current file using virtual text (at right corner)
   cmake_use_scratch_buffer = false, -- A buffer that shows what cmake-tools has done
+  session_name_provider = nil, -- A function that returns the user-defined session name
 }
 
 return const

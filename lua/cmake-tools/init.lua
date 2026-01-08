@@ -42,7 +42,7 @@ function cmake.setup(values)
   config = Config:new(const)
 
   -- auto reload previous session
-  local old_config = _session.load()
+  local old_config = _session.load(config)
   _session.update(config, old_config)
 
   local is_executor_installed = utils.get_executor(config.executor.name).is_installed()
