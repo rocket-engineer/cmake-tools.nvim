@@ -177,7 +177,6 @@ function cmake.generate(opt, callback)
       config:generate_build_directory()
 
       local args = {
-        -- TODO: add config:source_directory_path()
         "-S",
         config.cwd,
         "-B",
@@ -1472,6 +1471,10 @@ end
 
 function cmake.get_nprocs()
   return config.nprocs
+end
+
+function cmake.get_root()
+  return config.cwd
 end
 
 function cmake.get_target_settings()
