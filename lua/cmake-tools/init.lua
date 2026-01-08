@@ -112,7 +112,8 @@ function cmake.generate(opt, callback)
   -- if exists presets, preset include all info that cmake
   -- needed to execute, so we don't use cmake-kits.json and
   -- cmake-variants.[json|yaml] event they exist.
-  local presets_exists = config.base_settings.use_preset and Presets.exists(config.cwd)
+  -- FIX: local presets_exists = config.base_settings.use_preset and Presets.exists(config.cwd)
+  local presets_exists = Presets.exists(config.cwd)
   if presets_exists then
     local presets = Presets:parse(config.cwd)
 
