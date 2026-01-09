@@ -262,6 +262,7 @@ vim.api.nvim_create_user_command(
   cmake_tools.select_build_dir, -- command
   { -- opts
     nargs = "?",
+    bang = true,
     desc = "CMake select build dir",
   }
 )

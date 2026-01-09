@@ -1600,12 +1600,18 @@ function cmake.select_build_dir(opts)
         --if new_path:is_dir() then
         config:update_build_dir(vim.fn.resolve(input), vim.fn.resolve(input))
         --	end
-        cmake.generate({ bang = false, fargs = {} }, nil)
+
+        if opts.bang == nil or opts.bang == false then
+          cmake.generate({ bang = false, fargs = {} }, nil)
+        end
       end)
     )
   elseif opts.args then
     config:update_build_dir(vim.fn.resolve(opts.args), vim.fn.resolve(opts.args))
-    cmake.generate({ bang = false, fargs = {} }, nil)
+
+    if opts.bang == nil or opts.bang == false then
+      cmake.generate({ bang = false, fargs = {} }, nil)
+    end
   end
 end
 
