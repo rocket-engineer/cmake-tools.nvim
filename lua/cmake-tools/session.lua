@@ -46,10 +46,14 @@ local function init_cache()
   end
 end
 
-local function init_session()
+local function init_session(config)
   init_cache()
 
-  local path = get_current_path()
+  local user_path = nil
+  if config.session_name_provider then
+    user_path = config.session_name_provider()
+  end
+  local path = get_current_path(user_path)
   if not utils.file_exists(path) then
     local file = io.open(path, "w")
     if file then
@@ -153,7 +157,7 @@ function session.update(config, old_config)
 end
 
 function session.save(config)
-  init_session()
+  init_session(config)
 
   local user_path = nil
   if config.session_name_provider then
